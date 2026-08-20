@@ -3,6 +3,7 @@ package com.gamage.studentmanagementbackend.controller;
 import com.gamage.studentmanagementbackend.entity.User;
 import com.gamage.studentmanagementbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // GET all users
     @GetMapping
@@ -29,6 +33,7 @@ public class UserController {
     // POST create new user
     @PostMapping
     public User createUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -38,7 +43,7 @@ public class UserController {
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
             user.setUsername(updatedUser.getUsername());
-            user.setPassword(updatedUser.getPassword());
+            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             user.setEmail(updatedUser.getEmail());
             user.setRole(updatedUser.getRole());
             return userRepository.save(user);
