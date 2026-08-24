@@ -35,6 +35,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/error").permitAll()
 
                 // Users endpoints: ADMIN only
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
@@ -65,4 +66,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
