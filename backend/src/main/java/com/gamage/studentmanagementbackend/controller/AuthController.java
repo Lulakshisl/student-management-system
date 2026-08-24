@@ -1,6 +1,7 @@
 package com.gamage.studentmanagementbackend.controller;
 
 import com.gamage.studentmanagementbackend.config.JwtUtil;
+import com.gamage.studentmanagementbackend.dto.ErrorResponse;
 import com.gamage.studentmanagementbackend.dto.LoginRequest;
 import com.gamage.studentmanagementbackend.dto.LoginResponse;
 import com.gamage.studentmanagementbackend.dto.RegisterRequest;
@@ -8,6 +9,7 @@ import com.gamage.studentmanagementbackend.entity.User;
 import com.gamage.studentmanagementbackend.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -29,12 +31,12 @@ public class AuthController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         User user = userRepository.findByUsername(loginRequest.getUsername());
 
-        if (user == null) {
-            return ResponseEntity.status(401).body("Invalid username or password");
-        }
-
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid username or password");
+        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "Invalid username or password"
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
 
         String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
@@ -46,7 +48,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
         if (userRepository.findByUsername(registerRequest.getUsername()) != null) {
-            return ResponseEntity.status(409).body("Username already exists");
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.CONFLICT.value(),
+                    "Username already exists"
+            );
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
 
         User user = new User();
