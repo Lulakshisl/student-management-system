@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/authService";
 import Link from "next/link";
+import { GraduationCap } from "lucide-react";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -41,64 +42,80 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-[#0f0f14] px-4">
       <form
         onSubmit={handleSubmit}
-        className="border rounded-lg p-8 w-full max-w-sm shadow-sm"
+        className="bg-[#1a1a22] border border-[#2e2e38] rounded-2xl p-8 w-full max-w-sm shadow-xl"
       >
-        <h1 className="text-2xl font-bold mb-6">Register</h1>
+        <div className="flex flex-col items-center mb-6">
+          <div className="bg-indigo-600/20 p-3 rounded-full mb-3">
+            <GraduationCap size={28} className="text-indigo-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-white">Create account</h1>
+          <p className="text-gray-400 text-sm mt-1">Join the Student Management System</p>
+        </div>
 
-        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-        {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
+        {error && (
+          <p className="bg-red-600/10 text-red-400 text-sm rounded-lg px-3 py-2 mb-4 text-center">
+            {error}
+          </p>
+        )}
+        {success && (
+          <p className="bg-green-600/10 text-green-400 text-sm rounded-lg px-3 py-2 mb-4 text-center">
+            {success}
+          </p>
+        )}
 
-        <label className="block text-sm mb-1">Username</label>
+        <label className="block text-sm mb-1 text-gray-300">Username</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full rounded-lg px-3 py-2.5 mb-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
           required
         />
 
-        <label className="block text-sm mb-1">Email</label>
+        <label className="block text-sm mb-1 text-gray-300">Email</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full rounded-lg px-3 py-2.5 mb-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
           required
         />
 
-        <label className="block text-sm mb-1">Password</label>
+        <label className="block text-sm mb-1 text-gray-300">Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full rounded-lg px-3 py-2.5 mb-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
           required
         />
 
-        <label className="block text-sm mb-1">Role</label>
+        <label className="block text-sm mb-1 text-gray-300">Role</label>
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-6"
+          className="w-full rounded-lg px-3 py-2.5 mb-6 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
         >
           <option value="STUDENT">Student</option>
+          <option value="TEACHER">Teacher</option>
+          <option value="REGISTRAR">Registrar</option>
           <option value="ADMIN">Admin</option>
         </select>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white rounded py-2 hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-indigo-600 text-white rounded-lg py-2.5 font-medium hover:bg-indigo-500 disabled:opacity-50 transition"
         >
           {loading ? "Registering..." : "Register"}
         </button>
 
-        <p className="text-sm text-center mt-4">
+        <p className="text-sm text-center mt-5 text-gray-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/login" className="text-indigo-400 hover:underline">
             Login
           </Link>
         </p>
