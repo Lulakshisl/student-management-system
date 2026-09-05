@@ -31,13 +31,13 @@ export default function StudentsPage() {
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto p-6 sm:p-8">
         <h1 className="text-3xl font-bold text-white mb-6">Students</h1>
 
         {loading && <p className="text-gray-400">Loading students...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
-        <div className="grid gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {students.map((student) => (
             <div
               key={student.id}
@@ -45,21 +45,21 @@ export default function StudentsPage() {
             >
               <h2 className="text-lg font-semibold text-white">{student.name}</h2>
 
-              <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 mt-3 text-sm text-gray-400">
+              <div className="flex flex-col gap-1.5 mt-3 text-sm text-gray-400">
                 <div className="flex items-center gap-2">
-                  <Mail size={14} className="text-indigo-500" />
-                  {student.email}
+                  <Mail size={14} className="text-indigo-500 shrink-0" />
+                  <span className="truncate">{student.email}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar size={14} className="text-indigo-500" />
+                  <Calendar size={14} className="text-indigo-500 shrink-0" />
                   {student.dateOfBirth}
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin size={14} className="text-indigo-500" />
+                  <MapPin size={14} className="text-indigo-500 shrink-0" />
                   {student.address}
                 </div>
                 <div className="flex items-center gap-2">
-                  <BookOpen size={14} className="text-indigo-500" />
+                  <BookOpen size={14} className="text-indigo-500 shrink-0" />
                   {student.course?.name ?? "Not assigned"}
                 </div>
               </div>
