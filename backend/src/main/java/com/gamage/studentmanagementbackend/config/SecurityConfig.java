@@ -40,11 +40,22 @@ public class SecurityConfig {
                 // Users endpoints: ADMIN only
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                // Courses & Students: GET allowed for both roles, write ops ADMIN only
-                .requestMatchers(HttpMethod.GET, "/api/courses/**", "/api/students/**").hasAnyRole("ADMIN", "STUDENT")
-                .requestMatchers(HttpMethod.POST, "/api/courses/**", "/api/students/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/courses/**", "/api/students/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/courses/**", "/api/students/**").hasRole("ADMIN")
+                // Students: privacy-restricted — ADMIN and STUDENT only
+                .requestMatchers(HttpMethod.GET, "/api/students/**").hasAnyRole("ADMIN", "STUDENT")
+                .requestMatchers(HttpMethod.POST, "/api/students/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/students/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/students/**").hasRole("ADMIN")
+
+                // Courses: viewable by everyone logged in, write ops ADMIN only
+                .requestMatchers(HttpMethod.GET, "/api/courses/**").hasAnyRole("ADMIN", "STUDENT", "TEACHER", "REGISTRAR")
+                .requestMatchers(HttpMethod.POST, "/api/courses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/courses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasRole("ADMIN")
+
+                // Lecture Materials: viewable by everyone logged in, only ADMIN/TEACHER can upload or delete
+                .requestMatchers(HttpMethod.GET, "/api/materials/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/materials/**").hasAnyRole("ADMIN", "TEACHER")
+                .requestMatchers(HttpMethod.DELETE, "/api/materials/**").hasAnyRole("ADMIN", "TEACHER")
 
                 .anyRequest().authenticated()
             )
